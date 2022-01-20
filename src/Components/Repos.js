@@ -1,11 +1,36 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import axios from "axios";
 const Repos = () => {
   const location = useLocation();
   const userName = location.pathname.split("/")[2];
   const [repos, setRepos] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [loading1, setLoading1] = useState(false);
+
+  const [show, setShow] = useState(false);
+  const [readme, setReadMe] = useState("");
+  const showPopup = async (name) => {
+    setReadMe("");
+    setShow(true);
+    setLoading1(true);
+    await axios
+      .get(`https://api.github.com/repos/${userName}/${name}/readme`, {
+        headers: {
+          Authorization: "token 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",
+        },
+      })
+      .then((response) => {
+        // setRepos(response.data);
+
+        setReadMe(atob(response.data.content));
+
+        setLoading1(false);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   useEffect(() => {
     setLoading(true);
 
@@ -30,6 +55,9 @@ const Repos = () => {
 
   return (
     <div className="repos-container">
+      <Link to="/" className="repos-btn back-btn">
+        Go Back
+      </Link>
       <h1>Public Repositories</h1>
       {loading && <div className="loading">Loading.....</div>}
 
@@ -55,9 +83,31 @@ const Repos = () => {
                   <i className="fas fa-code-branch"></i> {repo.forks}
                 </span>
               </div>
+              <span
+                className="repos-btn readme-btn"
+                onClick={() => showPopup(repo.name)}
+              >
+                Show ReadMe
+              </span>
             </div>
           ))}
       </div>
+      {show && (
+        <div id="pop-up">
+          <div className="readme-content">
+            {loading1 && <div className="loading">Loading.....</div>}
+
+            {readme && (
+              <div
+                className="read-me-text"
+                dangerouslySetInnerHTML={{ __html: readme }}
+              />
+            )}
+
+            <i className="fas fa-times" onClick={() => setShow(false)}></i>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
