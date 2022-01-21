@@ -16,3 +16,9 @@ At the root folder enter the following command
 ```bash
 npm install
 ```
+
+and then
+
+```bash
+npm start
+```
