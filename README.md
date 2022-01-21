@@ -5,7 +5,7 @@
 ### `LIVE SITE`
 
 ```bash
-https://cranky-davinci-dd02f4.netlify.app/repos/snyff
+https://cranky-davinci-dd02f4.netlify.app/
 
 ```
 
