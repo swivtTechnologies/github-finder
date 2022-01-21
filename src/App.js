@@ -16,7 +16,7 @@ const App = () => {
           `https://api.github.com/search/users?q=${userName}&page=1&per_page=100`,
           {
             headers: {
-              Authorization: "token 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",
+              Authorization: `token ${process.env.REACT_APP_PERSONAL_ACCESS_TOKEN}`,
             },
           }
         )

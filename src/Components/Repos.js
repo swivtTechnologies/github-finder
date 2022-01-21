@@ -7,17 +7,19 @@ const Repos = () => {
   const [repos, setRepos] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loading1, setLoading1] = useState(false);
+  const [errormsg, setErrormsg] = useState("");
 
   const [show, setShow] = useState(false);
   const [readme, setReadMe] = useState("");
   const showPopup = async (name) => {
+    setErrormsg("");
     setReadMe("");
     setShow(true);
     setLoading1(true);
     await axios
       .get(`https://api.github.com/repos/${userName}/${name}/readme`, {
         headers: {
-          Authorization: "token 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",
+          Authorization: `token ${process.env.REACT_APP_PERSONAL_ACCESS_TOKEN}`,
         },
       })
       .then((response) => {
@@ -28,6 +30,9 @@ const Repos = () => {
         setLoading1(false);
       })
       .catch((error) => {
+        setErrormsg("No readme found for this repo");
+        setLoading1(false);
+
         console.log(error);
       });
   };
@@ -38,7 +43,7 @@ const Repos = () => {
       await axios
         .get(`https://api.github.com/users/${userName}/repos`, {
           headers: {
-            Authorization: "token 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",
+            Authorization: `token ${process.env.REACT_APP_PERSONAL_ACCESS_TOKEN}`,
           },
         })
         .then((response) => {
@@ -95,6 +100,7 @@ const Repos = () => {
       {show && (
         <div id="pop-up">
           <div className="readme-content">
+            {errormsg && <span className="no-user"> {errormsg}</span>}
             {loading1 && <div className="loading">Loading.....</div>}
 
             {readme && (
